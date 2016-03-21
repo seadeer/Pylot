@@ -28,9 +28,12 @@ class MySQLConnection(object):
     def query_db(self, query, data=None):
         cursor = self.conn.cursor(dictionary=True)
         if len(query.split(';')) > 1:
-            data = cursor.executemany(query, data)
+            data = cursor.execute(query, data, multi=True)
+            for cur in data:
+                print('cursor:', cur)
+                result = list(cur.fetchall())
             self.conn.commit()
-            return
+            return _convert(result)
         else:
             data = cursor.execute(query, data)
             if query[0:6].lower() != 'select':
