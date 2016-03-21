@@ -27,13 +27,18 @@ class MySQLConnection(object):
 
     def query_db(self, query, data=None):
         cursor = self.conn.cursor(dictionary=True)
-        data = cursor.execute(query, data)
-        if query[0:6].lower() != 'select':
+        if len(query.split(';')) > 1:
+            data = cursor.executemany(query, data)
             self.conn.commit()
             return
         else:
-            result = list(cursor.fetchall())
-            return _convert(result)
+            data = cursor.execute(query, data)
+            if query[0:6].lower() != 'select':
+                self.conn.commit()
+                return
+            else:
+                result = list(cursor.fetchall())
+                return _convert(result)
 
 def connect(config):
     return MySQLConnection(config)
