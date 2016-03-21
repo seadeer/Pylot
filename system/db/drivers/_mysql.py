@@ -2,7 +2,9 @@ import mysql.connector
 import collections
 
 def _convert(data):
-    if isinstance(data, basestring):
+    if isinstance(data, unicode):
+        return unicode(data)
+    elif isinstance(data, basestring):
         return str(data)
     elif isinstance(data, collections.Mapping):
         return dict(map(_convert, data.iteritems()))
