@@ -34,7 +34,8 @@ class MySQLConnection(object):
                 if cur.with_rows:
                     result = list(cur.fetchall())
             self.conn.commit()
-            return _convert(result)
+            if result:
+                return _convert(result)
         else:
             data = cursor.execute(query, data)
             if query[0:6].lower() != 'select':
