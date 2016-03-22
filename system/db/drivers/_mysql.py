@@ -31,7 +31,8 @@ class MySQLConnection(object):
             data = cursor.execute(query, data, multi=True)
             for cur in data:
                 print('cursor:', cur)
-                result = list(cur.fetchall())
+                if cur.with_rows:
+                    result = list(cur.fetchall())
             self.conn.commit()
             return _convert(result)
         else:
