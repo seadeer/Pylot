@@ -34,7 +34,11 @@ class MySQLConnection(object):
                 if cur.with_rows:
                     result = list(cur.fetchall())
             self.conn.commit()
-            if result:
+            try:
+                _convert(result)
+            except UnboundLocalError:
+                pass
+            else:
                 return _convert(result)
         else:
             data = cursor.execute(query, data)
